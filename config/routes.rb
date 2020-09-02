@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   # get '/movies/:id', to: 'movies#show', as: 'movie'
 
   # add all default /movies routes
-  # resources :movies
+  resources :movies
 
   # add the show action
-  resources :movies, only: [:show]
+  # resources :movies, only: [:show, :index, :new, :create]
 end

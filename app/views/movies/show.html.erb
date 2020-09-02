@@ -1,7 +1,13 @@
 <h1>
-Title <%= title %>
+Title <%= movie.title %>
 </h1>
 
 <h1>
-Director <%= director %>
+Director <%= movie.director %>
 </h1>
+
+<h1>
+Year <%= movie.year %>
+</h1>
+
+<%= button_to "Edit #{movie.title}", "/movies/#{movie.id}/edit", method: :get %>

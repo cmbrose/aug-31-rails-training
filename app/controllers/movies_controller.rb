@@ -1,19 +1,51 @@
 class MoviesController < ApplicationController
+    skip_before_action :verify_authenticity_token
+
+    def index
+        start = Integer(params[:start] || '0')
+        count = Integer(params[:count] || '10')
+
+        movies = Movie.offset(start).take(count)
+        render :locals => { movies: movies, next_start: start + count }
+    end
+    
     def show
+        movie = Movie.find(params[:id])
+        render :locals => { movie: movie }
+    end
+
+    def new
+        movie = Movie.new
+        render :locals => { movie: movie }
+    end
+
+    def create
+        title = params[:movie][:title]
+        director = params[:movie][:director]
+        year = params[:movie][:year]
+
+        movie = Movie.create(title: title, director: director, year: year)
+
+        redirect_to "/movies/#{movie.id}", locals: { movie: movie }
+    end
+
+    def edit
+        movie = Movie.find(params[:id])
+        render :locals => { movie: movie }
+    end
+
+    def update
         id = params[:id]
-        
-        if id == "1"
-            title = 'Parasite'
-            director = 'Bong Joon-ho'
 
-            # @movie = { title: 'Parasite', director: 'Bong Joon-ho' }
-        elsif id == "2"
-            title = 'Titanic'
-            director = 'James Cameron'
+        movie = Movie.find(id)
+        movie.update(movie_params)
 
-            # @movie = { title: 'Titanic', director: 'James Cameron' }
-        end
+        redirect_to "/movies/#{movie.id}", locals: { movie: movie }
+    end
 
-        render :locals => { title: title, director: director }
+    private
+
+    def movie_params
+        params.require(:movie).permit(:title, :director, :year)
     end
 end
